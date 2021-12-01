@@ -1,4 +1,6 @@
 module AdventOfCode2021 (main) where
 
+import qualified Day1
+
 main :: IO ()
-main = putStrLn "Hello, advent-of-code!"
+main = Day1.main
