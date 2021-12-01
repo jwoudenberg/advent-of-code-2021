@@ -1,0 +1,64 @@
+cabal-version: 1.18
+
+-- This file has been generated from package.yaml by hpack version 0.34.5.
+--
+-- see: https://github.com/sol/hpack
+
+name:           advent-of-code
+version:        0.1.0.0
+synopsis:       Advent Of Code 2021
+description:    Please see the README at <https://github.com/jwoudenberg/advent-of-code>.
+homepage:       https://github.com/jwoudenberg/advent-of-code#readme
+bug-reports:    https://github.com/jwoudenberg/advent-of-code/issues
+author:         Jasper Woudenberg
+maintainer:     mail@jasperwoudenberg.com
+copyright:      2021 Jasper Woudenberg
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+extra-doc-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/jwoudenberg/advent-of-code
+
+library
+  exposed-modules:
+      AdventOfCode2021
+  other-modules:
+      Paths_advent_of_code
+  hs-source-dirs:
+      src
+  default-extensions:
+      DeriveGeneric
+      GeneralizedNewtypeDeriving
+      NamedFieldPuns
+      NumericUnderscores
+      OverloadedStrings
+      ScopedTypeVariables
+      StrictData
+  ghc-options: -Wall -Werror -Wcompat -Widentities -Wincomplete-record-updates -Wpartial-fields -Wredundant-constraints -Wincomplete-uni-patterns
+  build-depends:
+      base >=4.10.1.0 && <5
+  default-language: Haskell2010
+
+executable advent-of-code
+  main-is: Main.hs
+  other-modules:
+      Paths_advent_of_code
+  hs-source-dirs:
+      app
+  default-extensions:
+      DeriveGeneric
+      GeneralizedNewtypeDeriving
+      NamedFieldPuns
+      NumericUnderscores
+      OverloadedStrings
+      ScopedTypeVariables
+      StrictData
+  ghc-options: -Wall -Werror -Wcompat -Widentities -Wincomplete-record-updates -Wpartial-fields -Wredundant-constraints -Wincomplete-uni-patterns -threaded -rtsopts "-with-rtsopts=-N -T" -O2
+  build-depends:
+      advent-of-code
+    , base >=4.10.1.0 && <5
+  default-language: Haskell2010

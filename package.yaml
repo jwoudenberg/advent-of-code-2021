@@ -1,0 +1,45 @@
+name: advent-of-code
+version: 0.1.0.0
+synopsis: Advent Of Code 2021
+description: Please see the README at <https://github.com/jwoudenberg/advent-of-code>.
+author: Jasper Woudenberg
+maintainer: mail@jasperwoudenberg.com
+copyright: 2021 Jasper Woudenberg
+homepage: https://github.com/jwoudenberg/advent-of-code#readme
+license-file: LICENSE
+github: jwoudenberg/advent-of-code
+extra-doc-files:
+- README.md
+library:
+  exposed-modules:
+  - AdventOfCode2021
+  source-dirs: src
+executables:
+  advent-of-code:
+    dependencies:
+    - advent-of-code
+    main: Main.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts "-with-rtsopts=-N -T"
+    - -O2
+dependencies:
+- base >= 4.10.1.0 && < 5
+ghc-options:
+- -Wall
+- -Werror
+- -Wcompat
+- -Widentities
+- -Wincomplete-record-updates
+- -Wpartial-fields
+- -Wredundant-constraints
+- -Wincomplete-uni-patterns
+default-extensions:
+- DeriveGeneric
+- GeneralizedNewtypeDeriving
+- NamedFieldPuns
+- NumericUnderscores
+- OverloadedStrings
+- ScopedTypeVariables
+- StrictData
