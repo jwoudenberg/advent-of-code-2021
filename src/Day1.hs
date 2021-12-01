@@ -7,7 +7,11 @@ main :: IO ()
 main = do
   file <- System.IO.readFile "day1.input"
   let depths :: [Int] = read <$> lines file
-  zipWith (-) depths (drop 1 depths)
+  let windows =
+        depths
+          & zipWith (+) (drop 1 depths)
+          & zipWith (+) (drop 2 depths)
+  zipWith (-) windows (drop 1 windows)
     & filter (< 0)
     & length
     & print
