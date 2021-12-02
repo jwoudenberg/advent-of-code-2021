@@ -28,6 +28,7 @@ library
       AdventOfCode2021
   other-modules:
       Day1
+      Day2
       Paths_advent_of_code
   hs-source-dirs:
       src

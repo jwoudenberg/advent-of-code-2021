@@ -1,6 +1,6 @@
 module AdventOfCode2021 (main) where
 
-import qualified Day1
+import qualified Day2 as Today
 
 main :: IO ()
-main = Day1.main
+main = Today.main
