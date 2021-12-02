@@ -5,7 +5,7 @@ import qualified System.IO
 
 main :: IO ()
 main = do
-  file <- System.IO.readFile "day1.input"
+  file <- System.IO.readFile "input/day1"
   let depths :: [Int] = read <$> lines file
   let windows =
         depths

@@ -19,7 +19,7 @@ go (aim, hor, ver) (instruction, amount) =
 
 parse :: IO [(String, Int)]
 parse = do
-  file <- System.IO.readFile "day2.input"
+  file <- System.IO.readFile "input/day2"
   pure $ parseLine <$> lines file
 
 parseLine :: String -> (String, Int)
