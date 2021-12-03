@@ -1,26 +1,33 @@
 module Day3 (main) where
 
 import Data.Function ((&))
-import Data.List (foldl', group, sort, sortOn, transpose)
+import Data.List (foldl', groupBy, sortOn)
 import qualified System.IO
 
 main :: IO ()
 main = do
   input <- parse
-  let binaryGamma =
-        transpose input
-          & fmap mostCommon
-  let gamma = toDec binaryGamma
-  let epsilon = toDec (fmap not binaryGamma)
-  print (gamma * epsilon)
+  let oxygenGenerator =
+        findRating last 0 input
+          & toDec
+  let co2Scrubber =
+        findRating head 0 input
+          & toDec
+  print (oxygenGenerator * co2Scrubber)
 
-mostCommon :: Ord a => [a] -> a
-mostCommon xs =
-  sort xs
-    & group
+findRating :: Ord a => ([[[a]]] -> [[a]]) -> Int -> [[a]] -> [a]
+findRating _ _ [row] = row
+findRating pick index rows =
+  rows
+    & groupOn (!! index)
     & sortOn length
-    & last -- biggest group
-    & head
+    & pick
+    & findRating pick (index + 1)
+
+groupOn :: Ord b => (a -> b) -> [a] -> [[a]]
+groupOn f xs =
+  sortOn f xs
+    & groupBy (\x y -> f x == f y)
 
 toDec :: [Bool] -> Int
 toDec = foldl' (\acc x -> acc * 2 + (if x then 1 else 0)) 0
