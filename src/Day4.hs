@@ -10,13 +10,18 @@ import qualified Data.Text.IO
 main :: IO ()
 main = do
   (numbers, boards) <- parse
-  let drawnNumbers = fmap (Set.fromList . flip take numbers) [1 ..]
-  let (winningNumbers, winningBoard) =
+  let revNumbers = List.reverse numbers
+  let drawnNumbers = fmap (Set.fromList . flip drop revNumbers) [0 ..]
+  let (oneBeforeWinningNumbers, lastWinningBoard) =
         (,) <$> drawnNumbers <*> (fmap toBoard boards)
-          & List.find (uncurry didWin)
+          & List.find (not . uncurry didWin)
           & Maybe.fromJust
+  let winningNumbers =
+        numbers
+          & take (1 + Set.size oneBeforeWinningNumbers)
+          & Set.fromList
   let remainingNumbers =
-        Set.unions (asRows winningBoard)
+        Set.unions (asRows lastWinningBoard)
           & (`Set.difference` winningNumbers)
   let score =
         Set.foldr (+) 0 remainingNumbers
