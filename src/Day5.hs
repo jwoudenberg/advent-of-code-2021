@@ -23,10 +23,13 @@ coordsInLine (x1, y1) (x2, y2) =
     else
       if (y1 == y2)
         then zip (range x1 x2) (repeat y1)
-        else []
+        else
+          let xs = range x1 x2
+              ys = range y1 y2
+           in if length xs == length ys then zip xs ys else []
 
 range :: Int -> Int -> [Int]
-range x y = if x < y then [x .. y] else [y .. x]
+range x y = if x < y then [x .. y] else reverse [y .. x]
 
 parse :: IO [((Int, Int), (Int, Int))]
 parse = do
