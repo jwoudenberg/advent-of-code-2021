@@ -32,6 +32,7 @@ library
       Day3
       Day4
       Day5
+      Day6
       Paths_advent_of_code
   hs-source-dirs:
       src
