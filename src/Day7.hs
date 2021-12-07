@@ -15,8 +15,13 @@ main = do
 fuelCost :: [Int] -> Int -> Int
 fuelCost crabs target =
   crabs
-    & fmap (\crab -> abs (crab - target))
+    & fmap (\crab -> costs !! abs (crab - target))
     & sum
+
+costs :: [Int]
+costs = go 0 0
+  where
+    go prev inc = (prev + inc) : go (prev + inc) (inc + 1)
 
 parse :: IO [Int]
 parse = do
