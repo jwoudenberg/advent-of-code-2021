@@ -14,20 +14,17 @@ main = do
         zip [0 :: Int ..] input
           & concatMap (\(i, row) -> zipWith (\j depth -> ((i, j), depth)) [0 :: Int ..] row)
           & Map.fromList
-  countFlashes 100 jumbos
+  countTillAllFlash 1 jumbos
     & print
 
 type Coord = (Int, Int)
 
-countFlashes :: Int -> Map.Map Coord Int -> Int
-countFlashes = go 0
-  where
-    go :: Int -> Int -> Map.Map Coord Int -> Int
-    go total 0 _ = total
-    go total i jumbos =
-      let newJumbos = step jumbos
-          flashes = Map.filter (== 0) newJumbos & Map.size
-       in go (total + flashes) (i - 1) newJumbos
+countTillAllFlash :: Int -> Map.Map Coord Int -> Int
+countTillAllFlash count jumbos =
+  let newJumbos = step jumbos
+   in if List.all (== 0) (Map.elems newJumbos)
+        then count
+        else countTillAllFlash (1 + count) newJumbos
 
 _printJumbos :: Map.Map Coord Int -> String
 _printJumbos jumbos =
