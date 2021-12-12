@@ -2,7 +2,7 @@ module Day12 (main) where
 
 import Data.Char (toLower)
 import Data.Function ((&))
-import Data.List (groupBy, sort)
+import Data.List (group, groupBy, sort)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromMaybe)
 import Data.Tuple (swap)
@@ -30,12 +30,25 @@ paths caves = step [["start"]] []
     step [] completed = completed
     step (done@("end" : _) : rest) completed = step rest (done : completed)
     step ((current : prevs) : rest) completed =
-      if isSmallCave current && current `elem` prevs
-        then step rest completed
-        else
+      if mayVisit current prevs
+        then
           let nexts = Map.lookup current caves & fromMaybe []
            in step (fmap (: current : prevs) nexts ++ rest) completed
+        else step rest completed
     step ([] : _) _ = undefined
+
+mayVisit :: String -> [String] -> Bool
+mayVisit "start" prevs = not ("start" `elem` prevs)
+mayVisit "end" prevs = not ("end" `elem` prevs)
+mayVisit cave _ | not (isSmallCave cave) = True
+mayVisit cave prevs =
+  let visitsBySmallCave =
+        filter isSmallCave (cave : prevs)
+          & sort
+          & group
+          & fmap length
+   in all (<= 2) visitsBySmallCave
+        && length (filter (> 1) visitsBySmallCave) <= 1
 
 isSmallCave :: String -> Bool
 isSmallCave cave = cave == fmap toLower cave
