@@ -1,6 +1,7 @@
 module Day13 (main) where
 
 import Data.Function ((&))
+import Data.List (foldl')
 import Data.Maybe (mapMaybe)
 import qualified Data.Set as Set
 import qualified Data.Text as T
@@ -11,12 +12,32 @@ type Coord = (Int, Int)
 main :: IO ()
 main = do
   (coords, folds) <- parse
-  fold (head folds) (Set.fromList coords)
-    & Set.size
-    & print
+  foldl' fold (Set.fromList coords) folds
+    & printDots
+    & putStrLn
 
-fold :: (Char, Int) -> Set.Set Coord -> Set.Set Coord
-fold ('x', col) coords =
+printDots :: Set.Set Coord -> String
+printDots coords =
+  let xMin = Set.map fst coords & Set.findMin
+      xMax = Set.map fst coords & Set.findMax
+      yMin = Set.map snd coords & Set.findMin
+      yMax = Set.map snd coords & Set.findMax
+   in foldr
+        ( \y acc ->
+            foldr
+              ( \x acc' ->
+                  if Set.member (x, y) coords
+                    then '#' : acc'
+                    else '.' : acc'
+              )
+              ('\n' : acc)
+              [xMin .. xMax]
+        )
+        ""
+        [yMin .. yMax]
+
+fold :: Set.Set Coord -> (Char, Int) -> Set.Set Coord
+fold coords ('x', col) =
   coords
     & Set.toList
     & mapMaybe
@@ -27,7 +48,7 @@ fold ('x', col) coords =
             EQ -> Nothing
       )
     & Set.fromList
-fold ('y', row) coords =
+fold coords ('y', row) =
   coords
     & Set.toList
     & mapMaybe
