@@ -10,18 +10,25 @@ import qualified System.IO
 main :: IO ()
 main = do
   input <- parse
+  let height = length input
   let terrain =
-        zip [0 :: Int ..] input
+        zip [0 :: Int .. (5 * height - 1)] (cycle input)
           & concatMap
             ( \(i, row) ->
-                zipWith
-                  ( \j depth ->
-                      ( ((i, j)),
-                        depth
+                let width = length row
+                 in zipWith
+                      ( \j risk ->
+                          ( (i, j),
+                            ( wrapOneToNine
+                                ( risk
+                                    + (i `div` height)
+                                    + (j `div` width)
+                                )
+                            )
+                          )
                       )
-                  )
-                  [0 :: Int ..]
-                  row
+                      [0 :: Int .. (5 * width - 1)]
+                      (cycle row)
             )
           & Map.fromList
   let (goal, _) = Map.findMax terrain
@@ -32,6 +39,9 @@ main = do
           & Set.fromList
   goDijkstra goal terrain prices
     & print
+
+wrapOneToNine :: Int -> Int
+wrapOneToNine n = 1 + ((n - 1) `mod` 9)
 
 goDijkstra :: Coord -> Terrain -> Prices -> Int
 goDijkstra goal terrain prices =
