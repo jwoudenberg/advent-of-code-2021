@@ -12,16 +12,30 @@ main :: IO ()
 main = do
   input <- parseInput
   let (packet, _) = run parsePacket input
-  sumVersions packet 0
+  eval packet
     & print
 
-sumVersions :: Packet -> Int -> Int
-sumVersions Literal {version} acc = acc + version
-sumVersions Operator {version, packets} acc =
-  foldr
-    sumVersions
-    (acc + version)
-    packets
+eval :: Packet -> Int
+eval Literal {bits} =
+  run
+    (parseInt (length bits))
+    bits
+    & fst
+eval Operator {operation = Sum, packets} =
+  sum (fmap eval packets)
+eval Operator {operation = Product, packets} =
+  product (fmap eval packets)
+eval Operator {operation = Minimum, packets} =
+  minimum (fmap eval packets)
+eval Operator {operation = Maximum, packets} =
+  maximum (fmap eval packets)
+eval Operator {operation = GreaterThan, packets = [x, y]} =
+  if eval x > eval y then 1 else 0
+eval Operator {operation = LessThan, packets = [x, y]} =
+  if eval x < eval y then 1 else 0
+eval Operator {operation = EqualTo, packets = [x, y]} =
+  if eval x == eval y then 1 else 0
+eval packet = error ("Invalid packet: " ++ show packet)
 
 newtype Parser a = Parser {run :: [Bool] -> (a, [Bool])}
   deriving (Functor)
@@ -52,8 +66,19 @@ data Packet
       }
   | Operator
       { version :: Int,
+        operation :: Operation,
         packets :: [Packet]
       }
+  deriving (Show)
+
+data Operation
+  = Sum
+  | Product
+  | Minimum
+  | Maximum
+  | GreaterThan
+  | LessThan
+  | EqualTo
   deriving (Show)
 
 parsePacket :: Parser Packet
@@ -73,7 +98,17 @@ parsePacket = do
       pure
         Operator
           { version = version,
-            packets = packets
+            packets = packets,
+            operation =
+              case type_ of
+                0 -> Sum
+                1 -> Product
+                2 -> Minimum
+                3 -> Maximum
+                5 -> GreaterThan
+                6 -> LessThan
+                7 -> EqualTo
+                _ -> error ("Unknown packet type: " ++ show type_)
           }
 
 parseLiteralBits :: [Bool] -> Parser [Bool]
