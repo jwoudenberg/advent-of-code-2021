@@ -17,9 +17,8 @@ main = do
             yMin = min y1 y2,
             yMax = max y1 y2
           }
-  findVelocity target
-    & snd
-    & maxHeight
+  findVelocities target
+    & length
     & print
 
 data Target = Target
@@ -30,10 +29,10 @@ data Target = Target
   }
   deriving (Show)
 
-findVelocity :: Target -> (Int, Int)
-findVelocity target =
+findVelocities :: Target -> [(Int, Int)]
+findVelocities target =
   [ (x, y)
-    | y <- reverse [(yMin target) .. (0 - yMin target)],
+    | y <- [(yMin target) .. (0 - yMin target)],
       x <- [0 .. (xMax target)]
   ]
     & fmap
@@ -53,13 +52,6 @@ findVelocity target =
                 else Just (xVel, yVel)
       )
     & catMaybes
-    & head
-
-maxHeight :: Int -> Int
-maxHeight = go 0
-  where
-    go height 0 = height
-    go height yVel = go (height + yVel) (yVel - 1)
 
 yPositions :: Int -> [Int]
 yPositions = go 0
