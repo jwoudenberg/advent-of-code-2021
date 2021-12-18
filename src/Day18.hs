@@ -4,7 +4,6 @@ module Day18 (main) where
 
 import Control.Applicative ((<|>))
 import Data.Function ((&))
-import Data.List (foldl')
 import Data.Maybe (fromJust)
 import qualified System.IO
 import qualified Text.ParserCombinators.ReadPrec as P
@@ -13,9 +12,9 @@ import Text.Read (readPrec)
 main :: IO ()
 main = do
   input <- parse
-  tail input
-    & foldl' add (head input)
-    & magnitude
+  [(x, y) | x <- input, y <- input]
+    & fmap (\(x, y) -> magnitude (add x y))
+    & maximum
     & print
 
 add :: SnailNo -> SnailNo -> SnailNo
